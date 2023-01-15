@@ -11,9 +11,8 @@ import FiltersForm from "./FiltersForm";
 const getFilters = () => storage.get("filters") || defaultFilters;
 const saveFilters = (filters) => storage.set("filters", filters);
 
-function AdvertsPage({ onAdvertsLoaded, adverts, ...props }) {
+export function AdvertsPage({ onAdvertsLoaded, adverts, ...props }) {
   const [filters, setFilters] = useState(getFilters);
-  // const { isLoading, data: adverts = [] } = useQuery(getAdverts);
   const { isLoadding } = useSelector(getUi);
 
   useEffect(() => {
