@@ -16,10 +16,7 @@ function AdvertPage() {
 
   const advert = useSelector(getAdvertDetail(advertId));
   console.log(isLoadding);
-  // const navigate = useNavigate();
-  // const getAdvertById = useCallback(() => getAdvert(advertId), [advertId]);
 
-  // const { isLoading, data: advert } = useQuery(getAdvertById);
   useEffect(() => {
     dispatch(advertLoad(advertId));
   }, [dispatch, advertId]);

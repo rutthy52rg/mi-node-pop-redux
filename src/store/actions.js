@@ -1,4 +1,4 @@
-import { areAdvertsLoaded, getAdvertDetail } from "./selectors";
+import { areAdvertsLoaded, areTagsLoaded, getAdvertDetail } from "./selectors";
 import {
   ADVERTS_LOADED_FAILURE,
   ADVERTS_LOADED_REQUEST,
@@ -16,6 +16,9 @@ import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGOUT,
+  TAGS_LOADED_FAILURE,
+  TAGS_LOADED_REQUEST,
+  TAGS_LOADED_SUCCESS,
   UI_RESET_ERROR,
 } from "./type";
 /* =============  LOGIN ==============  */
@@ -57,6 +60,7 @@ export const authLogout = () => {
     router.navigate(`/adverts`);
   };
 };
+
 /* =============  ADVERTS ==============  */
 export const advertsLoadedRequest = () => ({
   type: ADVERTS_LOADED_REQUEST,
@@ -85,6 +89,36 @@ export const advertsLoad = () => {
     }
   };
 };
+
+/* =============  LOADED TAGS  ==============  */
+export const tagsLoadedRequest = () => ({
+  type: TAGS_LOADED_REQUEST,
+});
+export const tagsLoadedSuccess = (tags) => ({
+  type: TAGS_LOADED_SUCCESS,
+  payload: tags,
+});
+export const tagsLoadedFailure = (error) => ({
+  type: TAGS_LOADED_FAILURE,
+  payload: error,
+  error: true,
+});
+
+// thuk
+export const tagsLoad = () => {
+  return async function (dispatch, getState, { api }) {
+    const areLoaded = areTagsLoaded(getState());
+    if (areLoaded) return;
+    try {
+      dispatch(tagsLoadedRequest());
+      const tags = await api.adverts.getTags();
+      dispatch(tagsLoadedSuccess(tags));
+    } catch (error) {
+      dispatch(tagsLoadedFailure(error));
+    }
+  };
+};
+
 /* =============  ADVERT DETAIL  ==============  */
 export const advertLoadedRequest = () => ({
   type: ADVERT_LOADED_REQUEST,
@@ -156,7 +190,7 @@ export const advertDeletedFailure = (error) => ({
   error: true,
 });
 
-// thuk
+// thunk
 export const advertDeleted = (advertId) => {
   return async function (dispatch, getState, { api, router }) {
     // const isLoaded = getAdvertDetail(advertId)(getState());

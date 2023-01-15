@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { connect, useSelector } from "react-redux";
 import { advertsLoad } from "../../../store/actions";
-import { areAdvertsLoaded, getAdverts } from "../../../store/selectors";
+import { getAdverts, getUi } from "../../../store/selectors";
 import storage from "../../../utils/storage";
 import AdvertsList from "./AdvertsList";
 import EmptyList from "./EmptyList";
@@ -14,11 +14,8 @@ const saveFilters = (filters) => storage.set("filters", filters);
 function AdvertsPage({ onAdvertsLoaded, adverts, ...props }) {
   const [filters, setFilters] = useState(getFilters);
   // const { isLoading, data: adverts = [] } = useQuery(getAdverts);
-  const { isLoading } = useSelector(areAdvertsLoaded);
+  const { isLoadding } = useSelector(getUi);
 
-  // useEffect(() => {
-  //   saveFilters(filters);
-  // }, [filters]);
   useEffect(() => {
     onAdvertsLoaded();
     saveFilters(filters);
@@ -26,7 +23,7 @@ function AdvertsPage({ onAdvertsLoaded, adverts, ...props }) {
 
   const filteredAdverts = filterAdverts(adverts, filters);
 
-  if (isLoading) {
+  if (isLoadding) {
     return "Loading...";
   }
 

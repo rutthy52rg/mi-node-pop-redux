@@ -5,12 +5,17 @@ import {
   ADVERT_LOADED_SUCCESS,
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGOUT,
+  TAGS_LOADED_SUCCESS,
   UI_RESET_ERROR,
 } from "./type";
 
 export const stateDefault = {
   auth: false,
   adverts: {
+    areLoaded: false,
+    data: [],
+  },
+  tags: {
     areLoaded: false,
     data: [],
   },
@@ -44,6 +49,13 @@ export function adverts(state = stateDefault.adverts, action) {
   if (action.type === ADVERT_DELETED_SUCCESS) {
     return { ...state };
   }
+  return state;
+}
+export function tags(state = stateDefault.tags, action) {
+  if (action.type === TAGS_LOADED_SUCCESS) {
+    return { areLoaded: true, data: action.payload };
+  }
+
   return state;
 }
 
