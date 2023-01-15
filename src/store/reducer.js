@@ -1,5 +1,7 @@
 import {
   ADVERTS_LOADED_SUCCESS,
+  ADVERT_CREATED_SUCCESS,
+  ADVERT_DELETED_SUCCESS,
   ADVERT_LOADED_SUCCESS,
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGOUT,
@@ -35,6 +37,12 @@ export function adverts(state = stateDefault.adverts, action) {
   }
   if (action.type === ADVERT_LOADED_SUCCESS) {
     return { ...state, data: [action.payload] };
+  }
+  if (action.type === ADVERT_CREATED_SUCCESS) {
+    return { ...state, data: [action.payload, ...state.data] }; // añadimos el último a la data que ya hay => ponemos el primero el nuevo para que se guarde antes que los existentes ya
+  }
+  if (action.type === ADVERT_DELETED_SUCCESS) {
+    return { ...state };
   }
   return state;
 }

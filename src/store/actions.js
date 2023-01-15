@@ -3,6 +3,12 @@ import {
   ADVERTS_LOADED_FAILURE,
   ADVERTS_LOADED_REQUEST,
   ADVERTS_LOADED_SUCCESS,
+  ADVERT_CREATED_FAILURE,
+  ADVERT_CREATED_REQUEST,
+  ADVERT_CREATED_SUCCESS,
+  ADVERT_DELETED_FAILURE,
+  ADVERT_DELETED_REQUEST,
+  ADVERT_DELETED_SUCCESS,
   ADVERT_LOADED_FAILURE,
   ADVERT_LOADED_REQUEST,
   ADVERT_LOADED_SUCCESS,
@@ -12,7 +18,7 @@ import {
   AUTH_LOGOUT,
   UI_RESET_ERROR,
 } from "./type";
-
+/* =============  LOGIN ==============  */
 export const authLoginRequest = () => ({
   type: AUTH_LOGIN_REQUEST,
 });
@@ -24,6 +30,7 @@ export const authLoginFailure = (error) => ({
   payload: error,
   error: true,
 });
+/* =============  LOGIN ==============  */
 //gracias al middleware y thunk
 export const authLogin = (credentials) => {
   return async function (dispatch, getState, { api, router }) {
@@ -39,7 +46,7 @@ export const authLogin = (credentials) => {
     }
   };
 };
-
+/* =============  LOGOUT ==============  */
 export const authLogoutSuccess = () => ({
   type: AUTH_LOGOUT,
 });
@@ -50,7 +57,7 @@ export const authLogout = () => {
     router.navigate(`/adverts`);
   };
 };
-
+/* =============  ADVERTS ==============  */
 export const advertsLoadedRequest = () => ({
   type: ADVERTS_LOADED_REQUEST,
 });
@@ -65,7 +72,6 @@ export const advertsLoadedFailure = (error) => ({
 });
 
 // thuk
-
 export const advertsLoad = () => {
   return async function (dispatch, getState, { api }) {
     const areLoaded = areAdvertsLoaded(getState());
@@ -79,13 +85,13 @@ export const advertsLoad = () => {
     }
   };
 };
-
+/* =============  ADVERT DETAIL  ==============  */
 export const advertLoadedRequest = () => ({
   type: ADVERT_LOADED_REQUEST,
 });
-export const advertLoadedSuccess = (tweet) => ({
+export const advertLoadedSuccess = (advert) => ({
   type: ADVERT_LOADED_SUCCESS,
-  payload: tweet,
+  payload: advert,
 });
 export const advertLoadedFailure = (error) => ({
   type: ADVERT_LOADED_FAILURE,
@@ -108,6 +114,66 @@ export const advertLoad = (advertId) => {
     }
   };
 };
+/* ============= CREATED ADVERT ==============  */
+export const advertCreatedRequest = () => ({
+  type: ADVERT_CREATED_REQUEST,
+});
+export const advertCreatedSuccess = (advert) => ({
+  type: ADVERT_CREATED_SUCCESS,
+  payload: advert,
+});
+export const advertCreatedFailure = (error) => ({
+  type: ADVERT_CREATED_FAILURE,
+  payload: error,
+  error: true,
+});
+// thuk
+export const advertCreated = (advert) => {
+  return async function (dispatch, getState, { api, router }) {
+    try {
+      dispatch(advertCreatedRequest());
+      const { id } = await api.adverts.createAdvert(advert);
+      const createAdvert = await api.adverts.getAdvert(id);
+      dispatch(advertCreatedSuccess(createAdvert));
+      router.navigate(`/adverts/${id}`);
+      return createAdvert;
+    } catch (error) {
+      dispatch(advertCreatedFailure(error));
+    }
+  };
+};
+/* =============  DELETED ADVERT ==============  */
+export const advertDeletedRequest = () => ({
+  type: ADVERT_DELETED_REQUEST,
+});
+export const advertDeletedSuccess = (advert) => ({
+  type: ADVERT_DELETED_SUCCESS,
+  payload: advert,
+});
+export const advertDeletedFailure = (error) => ({
+  type: ADVERT_DELETED_FAILURE,
+  payload: error,
+  error: true,
+});
+
+// thuk
+export const advertDeleted = (advertId) => {
+  return async function (dispatch, getState, { api, router }) {
+    // const isLoaded = getAdvertDetail(advertId)(getState());
+    // if (isLoaded) return;
+    try {
+      dispatch(advertDeletedRequest());
+      const advert = await api.adverts.deleteAdvert(advertId);
+      dispatch(advertDeletedSuccess(advert));
+      console.log("hecho");
+      //   advertsLoad();
+      router.navigate(`/adverts/${advertId}`);
+    } catch (error) {
+      dispatch(advertDeletedFailure(error));
+    }
+  };
+};
+
 export const uiResetError = () => ({
   type: UI_RESET_ERROR,
 });
