@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import useMutation from "../../../hooks/useMutation";
-import { advertLoad } from "../../../store/actions";
+import { advertDeleted, advertLoad } from "../../../store/actions";
 // import useQuery from "../../../hooks/useQuery";
 import { getAdvertDetail, getUi } from "../../../store/selectors";
 import { deleteAdvert } from "../service";
@@ -25,7 +25,7 @@ function AdvertPage() {
 
   const handleDelete = () => {
     console.log(advertId);
-    // dispatch(advertDeleted(advertId));
+    dispatch(advertDeleted(advertId));
     // mutation.execute(advertId).then(() => navigate("/"));
   };
 

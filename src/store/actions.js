@@ -180,9 +180,9 @@ export const advertCreated = (advert) => {
 export const advertDeletedRequest = () => ({
   type: ADVERT_DELETED_REQUEST,
 });
-export const advertDeletedSuccess = (advert) => ({
+export const advertDeletedSuccess = (advertId) => ({
   type: ADVERT_DELETED_SUCCESS,
-  payload: advert,
+  payload: advertId,
 });
 export const advertDeletedFailure = (error) => ({
   type: ADVERT_DELETED_FAILURE,
@@ -193,15 +193,12 @@ export const advertDeletedFailure = (error) => ({
 // thunk
 export const advertDeleted = (advertId) => {
   return async function (dispatch, getState, { api, router }) {
-    // const isLoaded = getAdvertDetail(advertId)(getState());
-    // if (isLoaded) return;
     try {
       dispatch(advertDeletedRequest());
-      const advert = await api.adverts.deleteAdvert(advertId);
-      dispatch(advertDeletedSuccess(advert));
+      await api.adverts.deleteAdvert(advertId);
+      dispatch(advertDeletedSuccess(advertId));
       console.log("hecho");
-      //   advertsLoad();
-      router.navigate(`/adverts/${advertId}`);
+      router.navigate(`/adverts`);
     } catch (error) {
       dispatch(advertDeletedFailure(error));
     }

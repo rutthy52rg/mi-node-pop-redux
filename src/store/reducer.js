@@ -47,7 +47,10 @@ export function adverts(state = stateDefault.adverts, action) {
     return { ...state, data: [action.payload, ...state.data] }; // añadimos el último a la data que ya hay => ponemos el primero el nuevo para que se guarde antes que los existentes ya
   }
   if (action.type === ADVERT_DELETED_SUCCESS) {
-    return { ...state };
+    return {
+      ...state,
+      data: [...state.data.filter((item) => item.id !== action.payload)],
+    };
   }
   return state;
 }
