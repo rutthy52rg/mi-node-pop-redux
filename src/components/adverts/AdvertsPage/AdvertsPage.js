@@ -1,28 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { connect, useSelector } from "react-redux";
+import { advertsLoad } from "../../../store/actions";
+import { areAdvertsLoaded, getAdverts } from "../../../store/selectors";
+import storage from "../../../utils/storage";
+import AdvertsList from "./AdvertsList";
+import EmptyList from "./EmptyList";
+import { defaultFilters, filterAdverts } from "./filters";
+import FiltersForm from "./FiltersForm";
 
-import FiltersForm from './FiltersForm';
-import AdvertsList from './AdvertsList';
-import EmptyList from './EmptyList';
-import storage from '../../../utils/storage';
-import { getAdverts } from '../service';
-import { defaultFilters, filterAdverts } from './filters';
-import useQuery from '../../../hooks/useQuery';
+const getFilters = () => storage.get("filters") || defaultFilters;
+const saveFilters = (filters) => storage.set("filters", filters);
 
-const getFilters = () => storage.get('filters') || defaultFilters;
-const saveFilters = filters => storage.set('filters', filters);
-
-function AdvertsPage() {
+function AdvertsPage({ onAdvertsLoaded, adverts, ...props }) {
   const [filters, setFilters] = useState(getFilters);
-  const { isLoading, data: adverts = [] } = useQuery(getAdverts);
+  // const { isLoading, data: adverts = [] } = useQuery(getAdverts);
+  const { isLoading } = useSelector(areAdvertsLoaded);
 
+  // useEffect(() => {
+  //   saveFilters(filters);
+  // }, [filters]);
   useEffect(() => {
+    onAdvertsLoaded();
     saveFilters(filters);
-  }, [filters]);
+  }, [onAdvertsLoaded, filters]);
 
   const filteredAdverts = filterAdverts(adverts, filters);
 
   if (isLoading) {
-    return 'Loading...';
+    return "Loading...";
   }
 
   return (
@@ -36,7 +41,7 @@ function AdvertsPage() {
         />
       )}
       {filteredAdverts.length ? (
-        <AdvertsList adverts={filteredAdverts} />
+        <AdvertsList adverts={filteredAdverts} {...props} />
       ) : (
         <EmptyList advertsCount={adverts.length} />
       )}
@@ -44,4 +49,15 @@ function AdvertsPage() {
   );
 }
 
-export default AdvertsPage;
+const mapStateToProps = (state, ownProps) => ({
+  // tweets: state.tweets,
+  adverts: getAdverts(state),
+});
+const mapDispatchToProps = { onAdvertsLoaded: advertsLoad };
+
+const connectedAdvertsPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdvertsPage);
+
+export default connectedAdvertsPage;

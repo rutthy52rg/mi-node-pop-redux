@@ -1,9 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { AdvertPage, AdvertsPage, NewAdvertPage } from '../adverts';
-import { LoginPage, RequireAuth } from '../auth';
-import NotFoundPage from './NotFoundPage';
-import Layout from '../layout';
+import { AdvertPage, AdvertsPage, NewAdvertPage } from "../adverts";
+import { LoginPage, RequireAuth } from "../auth";
+import Layout from "../layout";
+import NotFoundPage from "./NotFoundPage";
+
 
 function App() {
   return (

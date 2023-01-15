@@ -1,11 +1,11 @@
-import T from 'prop-types';
-import { Navigate, useLocation } from 'react-router-dom';
-
-import { useAuthContext } from '../context';
+import T from "prop-types";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
+import { getIsLogged } from "../../../store/selectors";
 
 const RequireAuth = ({ children }) => {
-  const { isLogged } = useAuthContext();
   const location = useLocation();
+  const isLogged = useSelector(getIsLogged);
 
   if (!isLogged) {
     return <Navigate to="/login" state={{ from: location }} />;
