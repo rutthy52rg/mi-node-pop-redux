@@ -2,11 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import useMutation from "../../../hooks/useMutation";
 import { advertDeleted, advertLoad } from "../../../store/actions";
 // import useQuery from "../../../hooks/useQuery";
 import { getAdvertDetail, getUi } from "../../../store/selectors";
-import { deleteAdvert } from "../service";
 import AdvertDetail from "./AdvertDetail";
 
 function AdvertPage() {
@@ -21,12 +19,9 @@ function AdvertPage() {
     dispatch(advertLoad(advertId));
   }, [dispatch, advertId]);
 
-  const mutation = useMutation(deleteAdvert);
-
   const handleDelete = () => {
     console.log(advertId);
     dispatch(advertDeleted(advertId));
-    // mutation.execute(advertId).then(() => navigate("/"));
   };
 
   if (isLoadding) {
@@ -37,7 +32,7 @@ function AdvertPage() {
     advert && (
       <AdvertDetail
         onDelete={handleDelete}
-        isLoading={mutation.isLoading}
+        isLoading={isLoadding}
         {...advert}
       />
     )

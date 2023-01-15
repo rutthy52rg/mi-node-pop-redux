@@ -144,6 +144,7 @@ export const advertLoad = (advertId) => {
       dispatch(advertLoadedSuccess(advert));
       console.log("hecho");
     } catch (error) {
+      console.log("eror", error);
       dispatch(advertLoadedFailure(error));
     }
   };

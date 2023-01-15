@@ -1,9 +1,10 @@
 import { composeWithDevTools } from "@redux-devtools/extension";
-import { combineReducers, createStore, applyMiddleware } from "redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunk from "redux-thunk";
 import * as adverts from "../components/adverts/service";
 import * as auth from "../components/auth/service";
 import * as reducers from "./../store/reducer";
+import { HISTORY_BACK } from "./type";
 
 const reducer = combineReducers(reducers);
 
@@ -19,7 +20,7 @@ const failureRedirections =
   (router, redirections) => (store) => (next) => (action) => {
     const result = next(action);
     if (action.error) {
-      const redirection = redirections[action.payload.status];
+      const redirection = redirections[action.payload.statusCode];
       if (redirection) {
         router.navigate(redirection);
       }
@@ -33,12 +34,37 @@ export default function configureStore(preloadedState, { router }) {
       401: "/login",
       404: "/404",
     }),
-    logger
+    logger,
   ];
   const store = createStore(
-    reducer,
+    historyHighOrderReducer(reducer),
     preloadedState,
     composeWithDevTools(applyMiddleware(...middlewares))
   );
   return store;
 }
+const historyHighOrderReducer = (reducer) => {
+  //MEGA REDUCER
+  return (state, action) => {
+    //punto intermedio por donde pasan los reducers
+    //rootstate es el objeto estructura stateDefault
+    //history lo que sacamos del estado que llegue higherOrderReducer si existe
+    const { history = [], ...rootState } = state;
+    if (action.type === HISTORY_BACK) {
+      //quitamos la ultima entrada de history en history
+      const newHistory = history.slice(0, history.length - 1);
+      //copiamos el penultimo state al nuevo state
+      return {
+        ...newHistory[newHistory.length - 1].state, //estate
+        history: newHistory, //history
+      };
+    }
+    const newState = reducer(rootState, action);
+
+    //devuelver nuevo objeto con el nuevo estado y guardamos la accion y el nuevo estado en el
+    return {
+      ...newState,
+      history: [...history, { action, state: newState }],
+    };
+  };
+};
