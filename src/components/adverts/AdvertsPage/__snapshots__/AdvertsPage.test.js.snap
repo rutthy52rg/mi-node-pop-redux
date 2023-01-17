@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdvertsPage snapshot with adverts 1`] = `
+<div>
+  <form>
+    <p>
+      Filters
+    </p>
+    <input
+      name="name"
+      value=""
+    />
+    <div>
+      <label>
+        <input
+          checked=""
+          name="sale"
+          type="radio"
+          value="all"
+        />
+        All
+      </label>
+      <label>
+        <input
+          name="sale"
+          type="radio"
+          value="sell"
+        />
+        Sell
+      </label>
+      <label>
+        <input
+          name="sale"
+          type="radio"
+          value="buy"
+        />
+        Buy
+      </label>
+    </div>
+    <div
+      class="rc-slider rc-slider-with-marks"
+      style="width: 400px; margin: 24px;"
+    >
+      <div
+        class="rc-slider-rail"
+      />
+      <div
+        class="rc-slider-step"
+      >
+        <span
+          class="rc-slider-dot"
+        />
+      </div>
+      <div
+        class="rc-slider-mark"
+      >
+        <span
+          class="rc-slider-mark-text"
+          style="transform: translateX(-50%);"
+        >
+          0
+        </span>
+      </div>
+    </div>
+    <div />
+    <button
+      type="submit"
+    >
+      Filter
+    </button>
+    <button>
+      Reset
+    </button>
+  </form>
+  <ul>
+    <li>
+      <a
+        href="/89621cd7-91f5-457b-b9d8-e358dff3657f"
+      >
+        <div>
+          <p>
+            asdfdasf
+          </p>
+          <p>
+            Sell
+          </p>
+          <p>
+            mobile
+          </p>
+          <p>
+            0
+          </p>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`AdvertsPage snapshot without adverts 1`] = `
+<div>
+  <div>
+    <p>
+      No adverts here!
+    </p>
+    <a
+      href="/new"
+    >
+      Create the first advert
+    </a>
+  </div>
+</div>
+`;
